@@ -4,25 +4,25 @@ sada::sada! {
     use serde_json::Value;
 
     #[جلب("/")]
-    غير_متزامنة دالة جلب_idea() -> تنفيذ Responder {
-        دع response_text = طابق reqwest::جلب("https://itsthisforthat.com/api.php?json").انتظر {
-            حسنا(response) => response.text().انتظر.فك(),
-            خطأ(err) => {
-                هاطبع!("Error fetching from API: {}", err);
+    غير_متزامنة دالة جلب_فكرة() -> تنفيذ Responder {
+        دع إجابة_نص = طابق reqwest::جلب("https://itsthisforthat.com/api.php?json").انتظر {
+            حسنا(إجابة) => إجابة.text().انتظر.فك(),
+            خطأ(يخطئ) => {
+                هاطبع!("خطأ : {}", يخطئ);
                 return "Error fetching from API";
             }
         };
 
-        دع response: نتيجة<Value, _> = serde_json::from_str(&response_text);
+        دع إجابة: نتيجة<Value, _> = serde_json::from_str(&إجابة_نص);
 
-        طابق response {
-            حسنا(idea_response) => {
-                اطبع!("This: {}", idea_response["this"]);
-                اطبع!("That: {}", idea_response["that"]);
+        طابق إجابة {
+            حسنا(فكرة_إجابة) => {
+                اطبع!("هذا: {}", فكرة_إجابة["this"]);
+                اطبع!("ذلك: {}", فكرة_إجابة["that"]);
                 "Options printed to console"
             }
-            خطأ(err) => {
-                هاطبع!("Error deserializing JSON: {}", err);
+            خطأ(يخطئ) => {
+                هاطبع!("خطأ : {}", يخطئ);
                 "Error deserializing JSON"
             }
         }
@@ -31,7 +31,7 @@ sada::sada! {
     #[actix_web::رئيسي]
     غير_متزامنة دالة رئيسي() -> std::دخ::نتيجة<()> {
         HttpServer::new(|| {
-            App::new().service(جلب_idea)
+            App::new().service(جلب_فكرة)
         })
         .bind("127.0.0.1:8080")?
         .run()
